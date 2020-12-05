@@ -7,6 +7,10 @@ const notesSchema = mongoose.Schema({
         type:ObjectId,
         ref:"user"
     },
+    notesName:{
+        type:String,
+        maxlength:100
+    },
     notes_url:{
         type:String,
         maxlength:100
