@@ -25,7 +25,7 @@ router.get('/allStudents',(req,res)=>{
 })
 
 router.delete('/deleteStudent/:userId',(req,res)=>{
-    User.findByIdAndDelete({id:req.params.userId},function(err,student){
+    User.findByIdAndDelete(req.params.userId,function(err,student){
         if(err){
             console.log(err)
         }
