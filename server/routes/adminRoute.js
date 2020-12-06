@@ -1,48 +1,49 @@
 const express = require('express');
 const router = express.Router()
-const mongoose = require('mongoose')
-const User = mongoose.model("User")
-
+const Student = require('../models/student')
+const Tutor = require('../models/tutor')
 
 router.get('/allTutors',(req,res)=>{
-    User.find({role:'tutor'})
+    Tutor.find()
     .then(tutors=>{
         res.json(tutors)
     })
     .catch(err=>{
-        console.log(err)
+        res.status(400).json(err)
     })  
 })
 
 router.get('/allStudents',(req,res)=>{
-    User.find({role:'student'})
+    Student.find()
     .then(students=>{
         res.json(students)
     })
     .catch(err=>{
-        console.log(err)
+        res.status(400).json(err)
     })  
 })
 
-router.delete('/deleteStudent/:userId',(req,res)=>{
-    User.findByIdAndDelete(req.params.userId,function(err,student){
+
+router.delete('/deleteStudent/:id',(req,res)=>{
+    Student.findByIdAndDelete(req.params.id,function(err,student){
         if(err){
-            console.log(err)
+            res.status(400).json(err)
         }
         else{
-            console.log("student deleted",student)
+            res.json(student)
         }
     })
 })
 
-router.delete('/deleteTutor/:userId',(req,res)=>{
-    User.findByIdAndDelete({id:req.params.userId},function(err,tutor){
+router.delete('/deleteTutor/:id',(req,res)=>{
+    Tutor.findByIdAndDelete(req.params.id,function(err,tutor){
         if(err){
-            console.log(err)
+            res.status(400).json(err)
         }
         else{
-            console.log("Tutor deleted",tutor)
+            res.json(tutor)
         }
     })
 })
+
 

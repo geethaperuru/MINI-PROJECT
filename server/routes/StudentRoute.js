@@ -1,48 +1,35 @@
 const express = require('express');
 const router = express.Router()
-const mongoose = require('mongoose')
-const User = mongoose.model("User")
-const StudentTutor = mongoose.model("student-tutor")
-const Tutor =mongoose.model("tutor")
+const { Student } = require('../models/student');
+const {Tutor} = require('../models/tutor')
 
 //student personal tutors
-router.get('/myTutors/:userId',(req,res)=>{
-    StudentTutor.find({studentId:userId})
-    .then(tutors=>{
+router.get('/myTutors/:id', (req,res)=>{
+    Student.findById(req.params.id)
+    .then(student=>{
+        const tutors = student.tutors.map(async tutorId => {await Tutor.findById(tutorId) })
         res.json(tutors)
     })
     .catch(err=>{
-        console.log(err)
-    })
-})
-
-//view subject of specific tutor
-router.get('/viewTutor/:tutorId',(req,res)=>{
-    Tutor.findOne(req.params.tutorId)
-    .then(tutor=>{
-        console.log(tutor)
-        res.json(tutor)
-    })
-    .catch(err=>{
-        console.log(err)
+        res.status(400).json(err)
     })
 })
 
 //view his profile 
 router.get('/profile/:studentId',(req,res)=>{
-    User.findOne(req.params.studentId)
+    Student.findById(req.params.studentId)
     .then(student=>{
         console.log(student)
         res.json(student)
     })
     .catch(err=>{
-        console.log(err)
+        res.status(400).json(err)
     })
 })
 
 //get tutors list based on subject
 router.get('/tutor/:subject',(req,res)=>{
-    Tutor.find({subject:subject})
+    Tutor.find({subject:req.params.subject})
     .then(tutors=>{
         console.log(tutors)
         res.json(tutors)
@@ -52,7 +39,53 @@ router.get('/tutor/:subject',(req,res)=>{
     })
 })
 
+
+
 //select the tutor
-router.put('/selectTutor/:tutorId',(req,res)=>{
+router.post('/selectTutor/:studentId',async (req,res)=>{
     
+    const student = await Student.findById(req.params.studentId)
+    const tutors = student.tutors
+    const tutorId = req.body.tutorId
+    if(tutors.indexOf(tutorId) != -1){
+        console.log(err)
+    }
+    else{
+        const newTutors = [...tutors,tutorId]
+        student.tutors = newTutors
+        const tutor = Tutor.findById(tutorId)
+        const newStudents = [...students,studentId]
+        tutor.students=newStudents
+        try{            
+            await student.save()
+            await tutor.save()
+            res.json("message:tutor is added")
+        }
+        catch(err){
+            
+        }
+    }
+})
+
+//update student name and email
+router.put('/updateStudent/:studentId',async (req,res)=>{
+    try{
+        const student = await Student.findByIdAndUpdate(req.params.studentId,{email:req.body.email , name:req.body.name,password:req.body.password})
+        if(!student) 
+            return res.status(404).json('student not found with this id');
+        res.json('Student updated');
+    }
+    catch(err){
+        res.status(400).json(err);
+    }
+})
+
+router.post('/addStudent',async (req,res)=>{
+    try{
+        const student = new Student({email:req.body.email , name : req.body.name , password : req.body.password,tutors:[]})
+        await student.save();
+    }
+    catch(err){
+        res.status(400).json(err);
+    }
 })
