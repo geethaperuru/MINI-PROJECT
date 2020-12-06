@@ -87,5 +87,5 @@ const adminSchema = mongoose.Schema({
 
 
 const Admin = mongoose.model('Admin',adminSchema)
-
+console.log('admin created')
 module.exports = { Admin }

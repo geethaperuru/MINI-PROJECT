@@ -8,8 +8,10 @@ router.post('/addTutor',async (req,res)=>{
     try{
         const tutor = new Tutor({email:req.body.email , name : req.body.name , password : req.body.password,subject:req.body.subject,notes:[],students:[]})
         await tutor.save();
+        res.json("tutor added")
     }
     catch(err){
+        console.log(err)
         res.status(400).json(err);
     }
 })
@@ -56,3 +58,7 @@ router.post('/addNotes/:tutorId',async (req,res)=>{
         res.status(400).json(err)
     }
 })
+
+module.exports={
+    tutorRouter : router
+}

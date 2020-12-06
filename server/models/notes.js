@@ -12,5 +12,5 @@ const notesSchema = mongoose.Schema({
 })
 
 const Note = mongoose.model('Note',notesSchema)
-
+console.log('notes created')
 module.exports = { Note }

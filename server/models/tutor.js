@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const {ObjectId} = mongoose.Schema.Types
-
+const note = require('./notes')
+const student =require('./student')
 const tutorSchema = mongoose.Schema({
     email:{
         type:String,
@@ -24,17 +25,17 @@ const tutorSchema = mongoose.Schema({
     notes:[
         {
             type:ObjectId,
-            ref:Notes
+            ref:note
         }
     ],
     students:[
         {
             type:ObjectId,
-            ref:Student
+            ref:student
         }
     ]
 })
 
 const Tutor = mongoose.model('Tutor',tutorSchema)
-
+console.log('tutor created')
 module.exports = { Tutor }

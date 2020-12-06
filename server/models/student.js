@@ -20,14 +20,14 @@ const StudentSchema={
     },
     tutors:[
         {
-            tutorId:{
+            
                 type:ObjectID,
                 ref:tutor
-            }
+            
         }
     ]   
 }
 
 const Student = mongoose.model('Student',StudentSchema)
-
+console.log('student created')
 module.exports = { Student }

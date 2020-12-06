@@ -46,4 +46,6 @@ router.delete('/deleteTutor/:id',(req,res)=>{
     })
 })
 
-
+module.exports={
+    adminRouter : router
+}

@@ -13,18 +13,29 @@ mongoose.connect(config.DATABASE,{
     console.log('connected to mongoose');
 })
 
-const { User } = require('./models/user'); 
-const { Student } = require('./models/student-tutor');
+const { Admin } = require('./models/admin'); 
+const { Notes } = require('./models/notes');
+const { Student } = require('./models/student');
 const { Tutor } = require('./models/tutor');
-const { Notes } = require('./models/tutor-notes');
 
+//const { Server } = require('mongodb');
 //const { auth} = require('./middleware/auth')
 
+app.use(express.json())
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+const adminRoute = require('./routes/adminRoute').adminRouter
+const studentRoute = require('./routes/StudentRoute').studentRouter
+const tutorRoute = require('./routes/tutorRoute').tutorRouter
+
+app.use('/admin',adminRoute)
+app.use('/student',studentRoute)
+app.use('/tutor',tutorRoute)
+
 
 
 const port = process.env.PORT || 3001;
 app.listen(port,()=>{
-    console.log(`SERVER RUNNNING`)
+    console.log(`SERVER RUNNNING`+port)
 })

@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router()
-const { Student } = require('../models/student');
-const {Tutor} = require('../models/tutor')
-
+//const { Student } = require('../models/student');
+//const {Tutor} = require('../models/tutor')
+const mongoose = require('mongoose')
+const Student = mongoose.model("Student")
+const Tutor = mongoose.model("Tutor")
 //student personal tutors
 router.get('/myTutors/:id', (req,res)=>{
     Student.findById(req.params.id)
@@ -11,6 +13,7 @@ router.get('/myTutors/:id', (req,res)=>{
         res.json(tutors)
     })
     .catch(err=>{
+        console.log(err)
         res.status(400).json(err)
     })
 })
@@ -53,16 +56,29 @@ router.post('/selectTutor/:studentId',async (req,res)=>{
     else{
         const newTutors = [...tutors,tutorId]
         student.tutors = newTutors
-        const tutor = Tutor.findById(tutorId)
-        const newStudents = [...students,studentId]
-        tutor.students=newStudents
+
+        // const tutor = Tutor.findById(tutorId)
+        // const students = tutor.students
+        // const newStudents = [...students,studentId]
+        // tutor.students=newStudents
         try{            
             await student.save()
+            //await tutor.save()
+            const tutor = Tutor.findById(tutorId)
+            const students = tutor.students
+            let newStudents = []
+            if(students.length == 0){
+                newStudents = [student]
+            }
+            else{
+                newStudents = [...students,studentId]
+            }
+            tutor.students = newStudents
             await tutor.save()
             res.json("message:tutor is added")
         }
         catch(err){
-            
+            res.status(400).json(err)
         }
     }
 })
@@ -84,8 +100,14 @@ router.post('/addStudent',async (req,res)=>{
     try{
         const student = new Student({email:req.body.email , name : req.body.name , password : req.body.password,tutors:[]})
         await student.save();
+        res.json("user added")
     }
     catch(err){
+        console.log(err)
         res.status(400).json(err);
     }
 })
+
+module.exports={
+    studentRouter : router
+}
