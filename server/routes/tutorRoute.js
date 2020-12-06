@@ -57,13 +57,31 @@ router.get('/getStudents/:tutorId',async (req,res)=>{
 
 router.post('/addNotes/:tutorId',async (req,res)=>{
     try{
-        let note = new Note({notesName:req.body.name,notesUrl:req.body.url})
+        let note = new Note({notesName:req.body.name,notes_url:req.body.url})
         note = await note.save();
-        const tutor = Tutor.findById(tutorId)
-        const newNotes = [...tutor.notes,note._id]
+        console.log(note)
+        const tutor = await Tutor.findById(req.params.tutorId)
+        let newNotes = []
+        if(tutor.notes.length == 0)
+            newNotes.push(note._id)
+        else
+            newNotes = [...tutor.notes,note._id]
         tutor.notes = newNotes;
         await tutor.save();
         res.json(note)
+    }
+    catch(err){
+        res.status(400).json(err)
+    }
+})
+
+router.post('/checkCred/:id',async (req,res)=>{
+    try{
+        const tutor = await Tutor.findById(req.params.id)
+        if(tutor.email === req.body.email && tutor.password === req.body.password){
+            return res.json("valid tutor")
+        }
+        return res.status(400).json("Invalid user")
     }
     catch(err){
         res.status(400).json(err)

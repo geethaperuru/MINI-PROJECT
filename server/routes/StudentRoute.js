@@ -115,6 +115,19 @@ router.post('/addStudent',async (req,res)=>{
     }
 })
 
+router.post('/checkCred/:id',async (req,res)=>{
+    try{
+        const student = await Student.findById(req.params.id)
+        if(student.email === req.body.email && student.password === req.body.password){
+            return res.json("valid student")
+        }
+        return res.status(400).json("Invalid user")
+    }
+    catch(err){
+        res.status(400).json(err)
+    }
+})
+
 module.exports={
     studentRouter : router
 }
