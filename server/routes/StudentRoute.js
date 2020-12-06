@@ -1,15 +1,24 @@
 const express = require('express');
+const student = require('../models/student');
 const router = express.Router()
-const mongoose = require('mongoose')
-const User = mongoose.model("User")
-const StudentTutor = mongoose.model("student-tutor")
-const Tutor =mongoose.model("tutor")
+
 
 //student personal tutors
-router.get('/myTutors/:userId',(req,res)=>{
-    StudentTutor.find({studentId:userId})
-    .then(tutors=>{
+router.get('/myTutors/:id', (req,res)=>{
+    StudentTutor.findById(req.params.id)
+    .then(student=>{
+        const tutors = student.tutors.map(async tutorId => {await Tutor.findById(tutorId) })
         res.json(tutors)
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+})
+
+router.get('/getTutorDetails/:tutorId',(req,res)=>{
+    User.findById(req.params.tutorId)
+    .then(tutor=>{
+        res.json(tutor)
     })
     .catch(err=>{
         console.log(err)
@@ -53,6 +62,8 @@ router.get('/tutor/:subject',(req,res)=>{
 })
 
 //select the tutor
-router.put('/selectTutor/:tutorId',(req,res)=>{
-    
+router.post('/selectTutor',(req,res)=>{
+    res.end(JSON.stringify({
+        student-tutor:student-tutor
+    }));
 })

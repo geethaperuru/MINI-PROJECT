@@ -1,12 +1,6 @@
 const mongoose = require('mongoose');
-const {ObjectId} = mongoose.Schema.Types
-
 const notesSchema = mongoose.Schema({
     
-    tutorId:{
-        type:ObjectId,
-        ref:"user"
-    },
     notesName:{
         type:String,
         maxlength:100
@@ -17,6 +11,6 @@ const notesSchema = mongoose.Schema({
     }  
 })
 
-const Notes = mongoose.model('Tutor-Notes',notesSchema)
+const Notes = mongoose.model('Notes',notesSchema)
 
 module.exports = { Notes }

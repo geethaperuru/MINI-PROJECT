@@ -1,7 +1,8 @@
+const { ObjectID } = require('mongodb');
 const mongoose = require('mongoose');
-const {ObjectId} = mongoose.Schema.Types
+const tutor = require('./tutor');
 
-const tutorSchema = mongoose.Schema({
+const StudentSchema={
     email:{
         type:String,
         required:true,
@@ -17,18 +18,16 @@ const tutorSchema = mongoose.Schema({
         type:String,
         maxlength:100
     },
-    subject:{
-        type:String,
-        maxlength:100
-    },
-    notes:[
+    tutors:[
         {
-            type:ObjectId,
-            ref:Notes
+            tutorId:{
+                type:ObjectID,
+                ref:tutor
+            }
         }
-    ]  
-})
+    ]   
+}
 
-const Tutor = mongoose.model('Tutor',tutorSchema)
+const Student = mongoose.model('Student',StudentSchema)
 
-module.exports = { Tutor }
+module.exports = { Student }
