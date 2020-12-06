@@ -26,7 +26,13 @@ const tutorSchema = mongoose.Schema({
             type:ObjectId,
             ref:Notes
         }
-    ]  
+    ],
+    students:[
+        {
+            type:ObjectId,
+            ref:Student
+        }
+    ]
 })
 
 const Tutor = mongoose.model('Tutor',tutorSchema)
