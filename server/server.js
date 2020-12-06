@@ -29,10 +29,20 @@ const adminRoute = require('./routes/adminRoute').adminRouter
 const studentRoute = require('./routes/StudentRoute').studentRouter
 const tutorRoute = require('./routes/tutorRoute').tutorRouter
 
-app.use('/admin',adminRoute)
+//app.use('/admin',adminRoute)
 app.use('/student',studentRoute)
 app.use('/tutor',tutorRoute)
 
+
+app.get('/api/admin/login',(req,res)=>{
+    console.log(req.body);
+    Admin.findOne({'email':req.body.email},(err,admin)=>{
+        if(!admin) return res.json({isAuth:false,message:"Authenetication failed"})
+        if(admin.password!==req.body.password)
+            return res.status(200).json({isAuth:false,message:"Incorrect Id or Password"})
+        return res.status(200).json({isAuth:true,message:"Logged In Succesfully",admin})
+    })
+})
 
 
 const port = process.env.PORT || 3001;

@@ -3,6 +3,7 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const Student = mongoose.model("Student")
 const Tutor = mongoose.model("Tutor")
+const Admin = mongoose.model("Admin")
 
 router.get('/allTutors',async (req,res)=>{
     const tutors = await Tutor.find()
@@ -34,6 +35,15 @@ router.delete('/deleteTutor/:id',async (req,res)=>{
         res.status(400).json("Tutor not Deleted")
     }
 
+})
+
+router.get('/login',(req,res)=>{
+    Admin.findOne({'email':req.body.email},(err,admin)=>{
+        if(!admin) return res.json({isAuth:false,message:"Authenetication failed"})
+        if(admin.password!==req.body.password)
+            return res.json({isAuth:false,message:"Incorrect Id or Password"})
+        return res.json({isAuth:true,message:"Logged In Succesfully",admin})
+    })
 })
 
 module.exports={

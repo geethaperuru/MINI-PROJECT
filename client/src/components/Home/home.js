@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
 
+import React, { Component } from 'react';
+import axios from 'axios';
 
 class Home extends Component {
 
@@ -18,18 +19,28 @@ class Home extends Component {
             formdata:newformdata
         })
     }
-    mapStateToProps = (state) => {
-        return {
-            formdata: state.formdata
-        }
-    }
 
     submitForm = (e) =>{
         e.preventDefault();
         //console.log(this.state.formdata)
+        const email = this.state.formdata.email;
+        const password = this.state.formdata.password;
+
+        console.log(email)
         if(this.state.formdata.role==="Admin")
         {
-            
+            axios({
+                method: "get",
+                url: "api/admin/login",
+                params: {
+                source_content_type: 'application/json',
+                email: email,
+                password : password
+                }
+                }).then(res => console.log(res.data));
+            // const request = axios.get('/api/admin/login',{'email':'khaja','password':password})
+            //         .then(response=>response.data);
+            // console.log(request);
         }
     }
 
